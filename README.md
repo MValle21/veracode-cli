@@ -4,7 +4,7 @@
 
 
 Analyze the latest build report according to the Adidas DevSecops compliance.
-Checking the latest build status and delete the incomplete scans automatically to make sure the application is ready for a new scan request. 
+Checking the latest build status and delete the incomplete scans automatically to make sure the application is ready for a new scan request.
 
 ## Requirements
 A Veracode API credential with Result API permission.
@@ -55,7 +55,7 @@ If the application is not compliant
 2020/02/03 07:12:28 [Error] your application is not compliant!
 ```
 
-#### Checking Application status. 
+#### Checking Application status.
 
 ```
 ./veracode-cli -user '<API_KEY>' -pass '<API_SECRET>' -command 'buildstatus' -appname '<Application Profile Name>'
@@ -79,6 +79,16 @@ The latest build will be deleted if the status is incomplete
 $ go get github.com/mitchellh/gox
 $ gox --output veracode-cli_{{.OS}}_{{.Arch}}
 ```
+
+## Publishing a release
+
+Edit [version](./version) file to change the version accoring to [semver](https://semver.org/). Commit the changes and then create a tag:
+
+```
+git tag -a $(make version) -m '$(make version)'
+```
+
+Once the tag is created, push the changes and Travis will automatically perform the release.
 
 
 ## License and Software Information
