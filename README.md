@@ -12,7 +12,7 @@ A Veracode API credential with Result API permission.
 ## Usage
 
 ```
-Usage of ../../bin/veracode-cli:
+Usage of veracode-cli:
   -appname string
         [Mandatory] Application Name
   -buildname string
