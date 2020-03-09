@@ -16,7 +16,7 @@ const (
 	VERSIONMSG    = "Veracode CLI version"
 )
 
-var Version string
+var Version = "source"
 
 func main() {
 	commands_desc := "[Mandatory] Veracode command: \n\t" +
