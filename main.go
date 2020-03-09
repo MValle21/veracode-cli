@@ -160,36 +160,52 @@ func main() {
 			log.Println("ComplianceCheck")
 			err := FindAppIdByName(credentials, &arguments.AppName, &arguments.AppID)
 			if err != nil {
-				log.Println(err)
-				os.Exit(EXIT_CODE)
+				if err.Error() == APP_NOT_FOUND {
+					log.Println(err)
+					fmt.Fprintln(os.Stdout, FLAG_APP_NOT_FOUND+"-"+err.Error())
+				} else {
+					log.Println(err)
+					fmt.Fprintln(os.Stdout, FLAG_APP_ERROR+"-"+err.Error())
+				}
+				os.Exit(0)
 			} else {
 				// Checking specific build
 				if *buildName != "" {
 					err = FindBuildIdByBuildName(credentials, &arguments.BuildID, &arguments.AppID, &arguments.BuildName)
 					if err != nil {
-
-						log.Println(err)
-						os.Exit(EXIT_CODE)
+						if err.Error() == BUILD_NOT_FOUND {
+							log.Println(err)
+							fmt.Fprintln(os.Stdout, FLAG_BUILD_NOT_FOUND+"-"+err.Error())
+						} else {
+							log.Println(err)
+							fmt.Fprintln(os.Stdout, FLAG_BUILD_ERROR+"-"+err.Error())
+						}
+						os.Exit(0)
 					}
 				}
 				severities, status := DevSecopsComplianceCheck(credentials, arguments.AppID, arguments.BuildID)
 				if !reflect.DeepEqual(severities, VeracodeSeverity{}) && status != nil {
 					log.Println("[Result] { High & V.High:", severities.HighAndVeryHigh, ", Medium:", severities.Medium, "}")
 					log.Println(status)
-					fmt.Fprintln(os.Stdout, status)
+					fmt.Fprintln(os.Stdout, FLAG_APP_NOT_COMPLIANT+"-"+status.Error())
 					os.Exit(0)
 				}
 				if status != nil {
-					log.Println(status)
-					fmt.Fprintln(os.Stdout, status)
-					os.Exit(EXIT_CODE)
+					if status.Error() == STATUS_SCAN_IS_NOT_READY {
+						log.Println(status)
+						fmt.Fprintln(os.Stdout, FLAG_BUILD_NOT_READY+"-"+status.Error())
+					} else {
+						log.Println(status)
+						fmt.Fprintln(os.Stdout, FLAG_REPORT_ERROR+"-"+status.Error())
+					}
+					os.Exit(0)
 				}
 				log.Println(APP_IS_COMPLIANT)
-				fmt.Fprintln(os.Stdout, APP_IS_COMPLIANT)
+				fmt.Fprintln(os.Stdout, FLAG_APP_COMPLIANT+"-"+APP_IS_COMPLIANT)
 			}
 		} else {
 			flag.PrintDefaults()
-			os.Exit(1)
+			os.Exit(EXIT_CODE)
 		}
 	default:
 		fmt.Println(INVALID_COMMAND)
