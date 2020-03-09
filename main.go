@@ -15,7 +15,6 @@ const (
 	STUCKDURATION = 4 //Hours
 	VERSIONMSG    = "Veracode CLI version"
 )
-
 var Version = "source"
 
 func main() {
