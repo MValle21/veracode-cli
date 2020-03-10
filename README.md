@@ -45,7 +45,7 @@ Usage of veracode-cli:
 If the application has some none-mitigated flaws with high severity
 
 ```
-2020/03/10 03:20:29 Veracode CLI version 1.2.0
+2020/03/10 03:20:29 Veracode CLI version 1.1.0
 2020/03/10 03:20:29 DevSecopscheck
 2020/03/10 03:20:29 Finding App ID
 2020/03/10 03:20:31 App ID:  *****
@@ -67,7 +67,7 @@ If the application has some none-mitigated flaws with high severity
 The latest build will be deleted if the status is incomplete
 
 ```
-2020/02/03 06:33:01 Veracode CLI version 1.2.0
+2020/02/03 06:33:01 Veracode CLI version 1.1.0
 2020/02/03 06:33:01 Checking Build status
 2020/02/03 06:33:01 Finding App ID
 2020/02/03 06:33:04 App ID:  ***
