@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	APP_IS_COMPLIANT         = "[success] your application is compliant."
-	APP_IS_NOT_COMPLIANT     = "[Error] your application is not compliant!"
+	APP_IS_OK         = "[success] The build has no none-mitigated flaws with high severity."
+	APP_IS_NOT_OK     = "[Error] The build has some none-mitigated flaws with high severity!"
 	SCAN_IS_READY            = "[Ok] Results Ready"
 	SCAN_IS_IN_PROGRESS      = "[Error] The scan is still in progress. Please wait !"
 	SCAN_STUCKED             = "[Error] The scan has been stuck and cannot be deleted automatically !"
@@ -37,8 +37,8 @@ const (
 	FLAG_APP_ERROR			 = "0000"
 	FLAG_BUILD_NOT_FOUND	 = "YN00"
 	FLAG_BUILD_ERROR		 = "Y000"
-	FLAG_APP_NOT_COMPLIANT   = "YYYN"
-	FLAG_APP_COMPLIANT		 = "YYYY"
+	FLAG_APP_IS_NOT_OK       = "YYYY"
+	FLAG_APP_IS_OK		     = "YYYN"
 	FLAG_BUILD_NOT_READY	 = "YYN0"
 	FLAG_REPORT_ERROR		 = "YYY0"
 	INVALID_COMMAND          = "[Error] Invalid Command."
@@ -447,7 +447,7 @@ func ScanCheckStatus(build *BuildInfo) error {
 		log.Printf(BUILD_STATUS, build.Build.AnalysisUnit.Status)
 		switch build.Build.AnalysisUnit.Status {
 		case STATUS_SCAN_IS_READY:
-			err = errors.New(APP_IS_NOT_COMPLIANT)
+			err = errors.New(APP_IS_NOT_OK)
 		case STATUS_SCAN_IN_PROGRESS:
 			err = errors.New(SCAN_IS_IN_PROGRESS)
 		case STATUS_SCAN_INCOMPLETE:

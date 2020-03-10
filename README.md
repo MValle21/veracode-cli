@@ -18,13 +18,13 @@ Usage of veracode-cli:
   -buildname string
         [Optional] Build Name
   -command string
-        [Mandatory] Veracode command:
-                getappid - Finding application ID by using application name.
-                getbuildinfo - Showing the information of the latest build
-                getbuildversion - Retrieving the latest build version name
-                getbuildid - Retrieving the build id by using build name/version
-                buildstatus - Checking the status of the latest build and delete it if it's been stuck
-                compliancecheck - Checking DevSecops compliance of the latest build for specific application.
+		[Mandatory] Veracode command:
+				getappid - Finding application ID by using application name.
+				getbuildinfo - Showing the information of the lastest build
+				getbuildversion - Retrieving the latest build version name
+				getbuildid - Retrieving the build id by using build name/version
+				buildstatus - Checking the status of the latest build and delete it if it's been stuck
+				devsecopscheck - Checking DevSecops check of the latest/specific build.
   -pass string
         [Mandatory] Password
   -user string
@@ -36,23 +36,26 @@ Usage of veracode-cli:
 
 ## Example
 
-#### Checking DevSecops compliance for a specific application
+#### DevSecops checking of a specific application
 
 ```
-./veracode-cli -user '<API_KEY>' -pass '<API_SECRET>' -command 'compliancecheck' -appname '<Application Profile Name>' -buildname <build name>
+./veracode-cli -user '<API_KEY>' -pass '<API_SECRET>' -command 'devsecopscheck' -appname '<Application Profile Name>' -buildname <build name>
 ```
 
-If the application is not compliant
+If the application has some none-mitigated flaws with high severity
 
 ```
-2020/02/03 07:12:23 ComplianceCheck
-2020/02/03 07:12:23 Finding App ID
-2020/02/03 07:12:26 App ID:  ****
-2020/02/03 07:12:26 Requesting build info
-2020/02/03 07:12:27 The build status is [Results Ready]
-2020/02/03 07:12:27 Requesting full report
-2020/02/03 07:12:28 [Result] { High & V.High: 0 , Medium: 37 }
-2020/02/03 07:12:28 [Error] your application is not compliant!
+2020/03/10 03:20:29 Veracode CLI version 1.2.0
+2020/03/10 03:20:29 DevSecopscheck
+2020/03/10 03:20:29 Finding App ID
+2020/03/10 03:20:31 App ID:  *****
+2020/03/10 03:20:31 Requesting build list
+2020/03/10 03:20:31 Build ID:  *****
+2020/03/10 03:20:31 Requesting build info
+2020/03/10 03:20:32 The build status is [Results Ready]
+2020/03/10 03:20:32 Requesting full report
+2020/03/10 03:20:35 [Result] { High & V.High: 0 , Medium: 3 }
+2020/03/10 03:20:35 [Error] The build has some none-mitigated flaws with high severity!
 ```
 
 #### Checking Application status.
@@ -64,6 +67,7 @@ If the application is not compliant
 The latest build will be deleted if the status is incomplete
 
 ```
+2020/02/03 06:33:01 Veracode CLI version 1.2.0
 2020/02/03 06:33:01 Checking Build status
 2020/02/03 06:33:01 Finding App ID
 2020/02/03 06:33:04 App ID:  ***

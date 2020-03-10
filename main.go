@@ -24,7 +24,7 @@ func main() {
 		"getbuildversion - Retrieving the latest build version name \n\t" +
 		"getbuildid - Retrieving the build id by using build name/version \n\t" +
 		"buildstatus - Checking the status of the latest build and delete it if it's been stuck \n\t" +
-		"compliancecheck - Checking DevSecops compliance of the latest build for specific application."
+		"devsecopscheck - Checking DevSecops check of the latest/specific build."
 	userPtr := flag.String("user", "", "[Mandatory] Username")
 	passPtr := flag.String("pass", "", "[Mandatory] Password")
 	command := flag.String("command", "", commands_desc)
@@ -153,10 +153,10 @@ func main() {
 			os.Exit(1)
 		}
 
-	case "compliancecheck":
+	case "devsecopscheck":
 		if *appName != "" {
 			log.Println(VERSIONMSG, Version)
-			log.Println("ComplianceCheck")
+			log.Println("DevSecopscheck")
 			err := FindAppIdByName(credentials, &arguments.AppName, &arguments.AppID)
 			if err != nil {
 				if err.Error() == APP_NOT_FOUND {
@@ -182,11 +182,11 @@ func main() {
 						os.Exit(0)
 					}
 				}
-				severities, status := DevSecopsComplianceCheck(credentials, arguments.AppID, arguments.BuildID)
+				severities, status := DevSecopsCheck(credentials, arguments.AppID, arguments.BuildID)
 				if !reflect.DeepEqual(severities, VeracodeSeverity{}) && status != nil {
 					log.Println("[Result] { High & V.High:", severities.HighAndVeryHigh, ", Medium:", severities.Medium, "}")
 					log.Println(status)
-					fmt.Fprintln(os.Stdout, FLAG_APP_NOT_COMPLIANT+"-"+status.Error())
+					fmt.Fprintln(os.Stdout, FLAG_APP_IS_NOT_OK+"-"+status.Error())
 					os.Exit(0)
 				}
 				if status != nil {
@@ -199,8 +199,8 @@ func main() {
 					}
 					os.Exit(0)
 				}
-				log.Println(APP_IS_COMPLIANT)
-				fmt.Fprintln(os.Stdout, FLAG_APP_COMPLIANT+"-"+APP_IS_COMPLIANT)
+				log.Println(APP_IS_OK)
+				fmt.Fprintln(os.Stdout, FLAG_APP_IS_OK+"-"+APP_IS_OK)
 			}
 		} else {
 			flag.PrintDefaults()
@@ -231,7 +231,7 @@ func getbuildVersion(credentials VeracodeCredentials, app_id string) (string, er
 	return Binfo.Build.Version, nil
 }
 
-func DevSecopsComplianceCheck(credentials VeracodeCredentials, app_id string, build_id string) (VeracodeSeverity, error) {
+func DevSecopsCheck(credentials VeracodeCredentials, app_id string, build_id string) (VeracodeSeverity, error) {
 	var Binfo BuildInfo
 	var severity_total VeracodeSeverity
 	var err error
@@ -243,20 +243,19 @@ func DevSecopsComplianceCheck(credentials VeracodeCredentials, app_id string, bu
 	if err != nil {
 		return severity_total, err
 	}
-	//Checking Policy Scan Compliance
+	//Checking the build status
 	err = ScanCheckStatus(&Binfo)
 	if err != nil {
-		//Analyze the report if the the policy scan is not compliant
-		if err.Error() == APP_IS_NOT_COMPLIANT {
+		//Analyze the report if the build is ready
+		if err.Error() == APP_IS_NOT_OK {
 			// Download Full report
 			report, err := downloadFullReport(credentials, &Binfo.Build.BuildID)
 			if err != nil {
 				return severity_total, err
 			}
-
 			severity_total, _ = SeveritiesNotApproved(&report)
 			if severity_total.Medium+severity_total.HighAndVeryHigh != 0 {
-				return severity_total, errors.New(APP_IS_NOT_COMPLIANT)
+				return severity_total, errors.New(APP_IS_NOT_OK)
 			}
 		} else {
 			return severity_total, errors.New(STATUS_SCAN_IS_NOT_READY)
@@ -287,7 +286,7 @@ func buildstatus(credentials VeracodeCredentials, app_name *string) error {
 	}
 	err = ScanCheckStatus(&Binfo)
 
-	if err == nil || err.Error() == APP_IS_NOT_COMPLIANT {
+	if err == nil || err.Error() == APP_IS_NOT_OK {
 		return errors.New(SCAN_IS_READY)
 	}
 
