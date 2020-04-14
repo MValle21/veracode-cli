@@ -33,7 +33,7 @@ const (
 	STATUS_PRE_SCAN_FAILED   = "Pre-Scan Failed"
 	STATUS_PRE_SCAN_SUCCESS  = "Pre-Scan Success"
 	STATUS_SCAN_UNKNOWN      = "[Error] Unknown status: "
-	STATUS_REPORT_UNAVAIL    = "No report available"
+	STATUS_REPORT_UNAVAIL    = "No report available."
 	FLAG_APP_NOT_FOUND		 = "N000"
 	FLAG_APP_ERROR			 = "0000"
 	FLAG_BUILD_NOT_FOUND	 = "YN00"
