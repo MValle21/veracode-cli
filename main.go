@@ -195,7 +195,7 @@ func main() {
 						fmt.Fprintln(os.Stdout, FLAG_BUILD_NOT_READY+"-"+status.Error())
 					} else {
 						log.Println(status)
-						fmt.Fprintln(os.Stdout, FLAG_REPORT_ERROR+"-"+status.Error())
+						fmt.Fprintln(os.Stdout, FLAG_REPORT_ERROR+"-"+STATUS_REPORT_UNAVAIL)
 					}
 					os.Exit(0)
 				}
@@ -247,6 +247,7 @@ func DevSecopsCheck(credentials VeracodeCredentials, app_id string, build_id str
 	err = ScanCheckStatus(&Binfo)
 	if err != nil {
 		//Analyze the report if the build is ready
+		//APP_IS_NOT_OK means the report is exist but has some severities
 		if err.Error() == APP_IS_NOT_OK {
 			// Download Full report
 			report, err := downloadFullReport(credentials, &Binfo.Build.BuildID)
