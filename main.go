@@ -141,7 +141,7 @@ func main() {
 			log.Println(VERSIONMSG, Version)
 			log.Println("Checking Build status")
 			err := buildstatus(credentials, &arguments.AppName)
-			if (err.Error() == SCAN_IS_READY) || (err.Error() == SCAN_STUCK_AND_DELETED) {
+			if (err.Error() == SCAN_IS_READY) || (err.Error() == SCAN_STUCK_AND_DELETED) || (err.Error() == BUILD_NOT_FOUND){
 				log.Println(err)
 				fmt.Fprintln(os.Stdout, err)
 			} else {
