@@ -12,7 +12,7 @@ import (
 
 const (
 	EXIT_CODE     = 1
-	STUCKDURATION = 4 //Hours
+	STUCKDURATION = 0 //Hours
 	VERSIONMSG    = "Veracode CLI version"
 )
 var Version = "source"
@@ -143,7 +143,7 @@ func main() {
 			err := buildstatus(credentials, &arguments.AppName)
 			if (err.Error() == SCAN_IS_READY) || (err.Error() == SCAN_STUCK_AND_DELETED) || (err.Error() == BUILD_NOT_FOUND){
 				log.Println(err)
-				fmt.Fprintln(os.Stdout, err)
+				fmt.Fprintln(os.Stdout, APP_IS_READY)
 			} else {
 				log.Println(err.Error())
 				os.Exit(EXIT_CODE)
@@ -291,7 +291,7 @@ func buildstatus(credentials VeracodeCredentials, app_name *string) error {
 		return errors.New(SCAN_IS_READY)
 	}
 
-	if err.Error() == STATUS_SCAN_INCOMPLETE || err.Error() == STATUS_PRE_SCAN_FAILED {
+	if err.Error() == STATUS_SCAN_INCOMPLETE || err.Error() == STATUS_PRE_SCAN_FAILED || err.Error() == STATUS_PRE_SCAN_SUBMITTED {
 		err = deleteAppLastBuild(credentials, app_id)
 		if err != nil {
 			return err
@@ -299,7 +299,7 @@ func buildstatus(credentials VeracodeCredentials, app_name *string) error {
 		return errors.New(SCAN_STUCK_AND_DELETED)
 	}
 
-	if err.Error() == SCAN_IS_IN_PROGRESS || err.Error() == STATUS_PRE_SCAN_SUCCESS {
+	if err.Error() == SCAN_IS_IN_PROGRESS || err.Error() == STATUS_PRE_SCAN_SUCCESS{
 		if Binfo.Build.PolicyUpdatedDate != "" {
 			elapsed, err := TimeSinceLastScan(&Binfo.Build.PolicyUpdatedDate)
 			if err != nil {
@@ -326,11 +326,6 @@ func TimeSinceLastScan(scantime *string) (int, error) {
 	LastScan := int(time.Since(t2).Hours())
 	if err != nil {
 		return -1, err
-	} else {
-		if LastScan >= STUCKDURATION {
-			return LastScan, nil
-		}
 	}
-
-	return -1, nil
+	return LastScan, nil
 }
