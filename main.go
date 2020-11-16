@@ -291,7 +291,8 @@ func buildstatus(credentials VeracodeCredentials, app_name *string) error {
 		return errors.New(SCAN_IS_READY)
 	}
 
-	if err.Error() == STATUS_SCAN_INCOMPLETE || err.Error() == STATUS_PRE_SCAN_FAILED || err.Error() == STATUS_PRE_SCAN_SUBMITTED {
+	if err.Error() == STATUS_SCAN_INCOMPLETE || err.Error() == STATUS_PRE_SCAN_FAILED || 
+	err.Error() == STATUS_PRE_SCAN_SUBMITTED || err.Error() == STATUS_NO_MODULES_DEFINED {
 		err = deleteAppLastBuild(credentials, app_id)
 		if err != nil {
 			return err

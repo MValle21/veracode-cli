@@ -33,7 +33,8 @@ const (
 	STATUS_SCAN_INCOMPLETE    = "Incomplete"
 	STATUS_PRE_SCAN_FAILED    = "Pre-Scan Failed"
 	STATUS_PRE_SCAN_SUCCESS   = "Pre-Scan Success"
-  STATUS_PRE_SCAN_SUBMITTED = "Pre-Scan Submitted"
+	STATUS_PRE_SCAN_SUBMITTED = "Pre-Scan Submitted"
+	STATUS_NO_MODULES_DEFINED = "No Modules Defined"
 	STATUS_SCAN_UNKNOWN       = "[Error] Unknown status: "
 	STATUS_REPORT_UNAVAIL     = "No report available."
 	FLAG_APP_NOT_FOUND		 = "N000"
@@ -459,8 +460,10 @@ func ScanCheckStatus(build *BuildInfo) error {
 			err = errors.New(STATUS_PRE_SCAN_FAILED)
 		case STATUS_PRE_SCAN_SUCCESS:
 			err = errors.New(STATUS_PRE_SCAN_SUCCESS)
-    case STATUS_PRE_SCAN_SUBMITTED:
-      err = errors.New(STATUS_PRE_SCAN_SUBMITTED)
+		case STATUS_PRE_SCAN_SUBMITTED:
+			err = errors.New(STATUS_PRE_SCAN_SUBMITTED)
+		case STATUS_NO_MODULES_DEFINED:
+			err = errors.New(STATUS_NO_MODULES_DEFINED)
 		default:
 			err = errors.New(STATUS_SCAN_UNKNOWN + build.Build.AnalysisUnit.Status)
 		}
